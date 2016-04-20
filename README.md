@@ -1,3 +1,8 @@
+*This is a quick and dirty fork of RIOT-OS to allow me to use the ATSAMR21ZZL-EK
+board (not supported in the main codebase) and also to use the ADC on the
+samr21g CPU.*
+
+
                           ZZZZZZ
                         ZZZZZZZZZZZZ
                       ZZZZZZZZZZZZZZZZ
