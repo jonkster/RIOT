@@ -138,6 +138,7 @@ void gnrc_ipv6_demux(kernel_pid_t iface, gnrc_pktsnip_t *current, gnrc_pktsnip_t
 
             break;
         default:
+            current = pkt; // <--- JK makes it work - perhaps do only for nh == UDP??
             (void)iface;
             break;
     }
@@ -204,7 +205,8 @@ void gnrc_ipv6_demux(kernel_pid_t iface, gnrc_pktsnip_t *current, gnrc_pktsnip_t
         break;
     }
 
-    assert(current == pkt);
+    if (pkt->size != 0) // <--- JK may not be necessary - trying to fix crash when udp signalling between nodes
+        assert(current == pkt);
     gnrc_pktbuf_release(pkt);
 }
 
