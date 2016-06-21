@@ -238,7 +238,7 @@ typedef struct {
 
 // added by JK to get ADC working
 // -------------------------------------
-#define ADC_NUMOF           (0)
+#define ADC_NUMOF           (1)
 typedef enum {
     SAMR21_ADC_RES_8BIT,           /**< ADC resolution: 8 bit */
     SAMR21_ADC_RES_10BIT,          /**< ADC resolution: 10 bit */

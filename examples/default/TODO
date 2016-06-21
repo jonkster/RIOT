@@ -1,0 +1,20 @@
+ basic file structure  - done
+ cortex-m0_common usage 
+ scripts for flashing/debuging (needs newest openocd from git) 
+ LED marcos 
+ set F_CPU correctly
+ LPM
+ peripheral drivers
+        UART 
+        timer 
+        GPIO 
+        cpuid 
+        SPI 
+        I2C 
+        rtt 
+        rtc 
+        pwm
+        adc
+        random number generator (RNG)
+        PLL 
+ radio driver at86rf2xx 

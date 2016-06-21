@@ -26,7 +26,7 @@
 #include "debug.h"
 
 /* guard in case that no ADC device is defined */
-//#if ADC_NUMOF
+#if ADC_NUMOF
 
 /* Prototypes */
 bool adc_syncing(Adc*);
@@ -392,4 +392,4 @@ uint32_t adc_get_status(Adc* adc)
 }
 
 
-//#endif /* ADC_NUMOF */
+#endif /* ADC_NUMOF */
