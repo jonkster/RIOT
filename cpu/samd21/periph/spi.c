@@ -1,3 +1,4 @@
+#include <stdio.h>
 /*
  * Copyright (C) 2014 Freie Universität Berlin
  *
@@ -150,6 +151,8 @@ int spi_init_master(spi_t dev, spi_conf_t conf, spi_speed_t speed)
                           | GCLK_CLKCTRL_GEN_GCLK0
                           | (SERCOM5_GCLK_ID_CORE << GCLK_CLKCTRL_ID_Pos)));
 
+        /* Setup clock */
+        while (GCLK->STATUS.bit.SYNCBUSY) {}
         /* Mux enable*/
         SPI_1_SCLK_DEV.PINCFG[ SPI_1_SCLK_PIN ].bit.PMUXEN = 1;
         SPI_1_MISO_DEV.PINCFG[ SPI_1_MISO_PIN ].bit.PMUXEN = 1;
@@ -195,6 +198,12 @@ int spi_init_master(spi_t dev, spi_conf_t conf, spi_speed_t speed)
     while(spi_dev->SYNCBUSY.reg) {}
     spi_poweron(dev);
     return 0;
+}
+
+int spi_conf_pins(spi_t dev)
+{
+    printf("woah?\n");
+    return 1;
 }
 
 int spi_init_slave(spi_t dev, spi_conf_t conf, char (*cb)(char))
@@ -248,11 +257,10 @@ int spi_transfer_byte(spi_t dev, char out, char *in)
     while (!spi_dev->INTFLAG.bit.DRE) {} /* while data register is not empty*/
     spi_dev->DATA.bit.DATA = out;
 
-    while (!spi_dev->INTFLAG.bit.RXC) {} /* while receive is not complete*/
-    tmp = (char)spi_dev->DATA.bit.DATA;
-
     if (in != NULL)
     {
+        while (!spi_dev->INTFLAG.bit.RXC) {} /* while receive is not complete*/
+        tmp = (char)spi_dev->DATA.bit.DATA;
         in[0] = tmp;
     }
     return 1;

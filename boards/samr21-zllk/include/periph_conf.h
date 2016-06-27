@@ -168,17 +168,17 @@ static const pwm_conf_t pwm_config[] = {
 /*      SPI1             */
 #define SPI_1_DEV          SERCOM5->SPI
 #define SPI_IRQ_1          SERCOM5_IRQn
-#define SPI_1_DOPO         (1)
-#define SPI_1_DIPO         (2)
+#define SPI_1_DOPO         (0)
+#define SPI_1_DIPO         (3)
 
 #define SPI_1_SCLK_DEV     PORT->Group[1]
-#define SPI_1_SCLK_PIN     (23)
+#define SPI_1_SCLK_PIN     (03)
 
 #define SPI_1_MISO_DEV     PORT->Group[1]
-#define SPI_1_MISO_PIN     (02)
+#define SPI_1_MISO_PIN     (22)
 
 #define SPI_1_MOSI_DEV     PORT->Group[1]
-#define SPI_1_MOSI_PIN     (22)
+#define SPI_1_MOSI_PIN     (02)
 /** @} */
 
 /**
