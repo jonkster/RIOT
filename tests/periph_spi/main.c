@@ -259,6 +259,19 @@ int cmd_transfer(int argc, char **argv)
     }
 }
 
+int cmd_bigtest(int argc, char **argv)
+{
+    char *newArgv[2]; 
+    char *testString = "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU";
+    newArgv[0] = argv[0];
+    newArgv[1] = testString;
+    for (int i = 0; i < 500; i++)
+    {
+        cmd_transfer(2, newArgv);
+    }
+    return 0;
+}
+
 int cmd_print(int argc, char **argv)
 {
     if (spi_master != 0) {
@@ -278,6 +291,7 @@ static const shell_command_t shell_commands[] = {
     { "init_master", "Initialize node as SPI master", cmd_init_master },
     { "init_slave", "Initialize node as SPI slave", cmd_init_slave },
     { "send", "Transfer string to slave (only in master mode)", cmd_transfer },
+    { "bigtest", "Transfer lots of stuff to slave (only in master mode)", cmd_bigtest },
     { "print_rx", "Print the received string (only in slave mode)", cmd_print },
     { NULL, NULL, NULL }
 };
