@@ -200,12 +200,6 @@ int spi_init_master(spi_t dev, spi_conf_t conf, spi_speed_t speed)
     return 0;
 }
 
-int spi_conf_pins(spi_t dev)
-{
-    printf("woah?\n");
-    return 1;
-}
-
 int spi_init_slave(spi_t dev, spi_conf_t conf, char (*cb)(char))
 {
     /* TODO */
