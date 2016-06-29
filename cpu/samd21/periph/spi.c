@@ -251,9 +251,9 @@ int spi_transfer_byte(spi_t dev, char out, char *in)
     while (!spi_dev->INTFLAG.bit.DRE) {} /* while data register is not empty*/
     spi_dev->DATA.bit.DATA = out;
 
+    while (!spi_dev->INTFLAG.bit.RXC) {} /* while receive is not complete*/
     if (in != NULL)
     {
-        while (!spi_dev->INTFLAG.bit.RXC) {} /* while receive is not complete*/
         tmp = (char)spi_dev->DATA.bit.DATA;
         in[0] = tmp;
     }
