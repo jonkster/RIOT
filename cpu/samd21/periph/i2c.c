@@ -186,6 +186,13 @@ int i2c_init_master(i2c_t dev, i2c_speed_t speed)
                 I2CSercom->BAUD.reg =SERCOM_I2CM_BAUD_HSBAUD(tmp_baud);
             }
             break;
+        case I2C_SPEED_FAST_PLUS:
+            tmp_baud = (int32_t)(((clock_source_speed + (2*(1000000)) - 1) / (2*(1000000))) - 1);
+            if (tmp_baud < 255 && tmp_baud > 0) {
+                I2CSercom->CTRLA.reg |= SERCOM_I2CM_CTRLA_SPEED(2);
+                I2CSercom->BAUD.reg =SERCOM_I2CM_BAUD_HSBAUD(tmp_baud);
+            }
+            break;
         default:
             DEBUG("BAD BAUDRATE\n");
             return -2;

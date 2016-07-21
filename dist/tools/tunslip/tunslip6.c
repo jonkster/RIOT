@@ -169,7 +169,7 @@ void
 serial_to_tun(FILE *inslip, int outfd)
 {
     static union {
-        unsigned char inbuf[2000];
+        unsigned char inbuf[2048];
     } uip;
     static int inbufptr = 0;
     int ret, i;
@@ -341,7 +341,8 @@ after_fread:
                     }
 
                     if (write(outfd, uip.inbuf, inbufptr) != inbufptr) {
-                        err(1, "serial_to_tun: write");
+                        printf("serial_to_tun: write write not same as buffer??\n");
+                        //err(1, "serial_to_tun: write");
                     }
                 }
 
@@ -402,7 +403,7 @@ after_fread:
     goto read_more;
 }
 
-unsigned char slip_buf[2000];
+unsigned char slip_buf[2048];
 int slip_end, slip_begin;
 
 void
@@ -544,11 +545,11 @@ int
 tun_to_serial(int infd, int outfd)
 {
     struct {
-        unsigned char inbuf[2000];
+        unsigned char inbuf[2048];
     } uip;
     int size;
 
-    if ((size = read(infd, uip.inbuf, 2000)) == -1) {
+    if ((size = read(infd, uip.inbuf, 2048)) == -1) {
         err(1, "tun_to_serial: read");
     }
 

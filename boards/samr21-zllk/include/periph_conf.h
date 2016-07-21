@@ -98,8 +98,8 @@ extern "C" {
 static const uart_conf_t uart_config[] = {
     /* device, RX pin, TX pin, mux */
     {&SERCOM3->USART, GPIO_PIN(PA,27), GPIO_PIN(PA,28), GPIO_MUX_F},
-    //{&SERCOM5->USART, GPIO_PIN(PB,2), GPIO_PIN(PB,3), GPIO_MUX_D},
-    {&SERCOM5->USART, GPIO_PIN(PA,23), GPIO_PIN(PA,22), GPIO_MUX_D},
+    {&SERCOM5->USART, GPIO_PIN(PB,2), GPIO_PIN(PB,3), GPIO_MUX_D},
+//    {&SERCOM5->USART, GPIO_PIN(PA,23), GPIO_PIN(PA,22), GPIO_MUX_D},
 };
 
 /* interrupt function name mapping */
@@ -193,9 +193,9 @@ static const pwm_conf_t pwm_config[] = {
 #define I2C_3_EN            0
 #define I2C_IRQ_PRIO        1
 
-#define I2C_0_DEV           SERCOM3->I2CM
-#define I2C_0_IRQ           SERCOM3_IRQn
-#define I2C_0_ISR           isr_sercom3
+#define I2C_0_DEV           SERCOM1->I2CM
+#define I2C_0_IRQ           SERCOM1_IRQn
+#define I2C_0_ISR           isr_sercom1
 /* I2C 0 pin configuration */
 #define I2C_0_PORT          (PORT->Group[0])
 #define I2C_SDA             PIN_PA16
