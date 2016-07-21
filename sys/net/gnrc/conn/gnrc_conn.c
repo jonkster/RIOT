@@ -25,7 +25,7 @@ int gnrc_conn_recvfrom(conn_t *conn, void *data, size_t max_len, void *addr, siz
                        uint16_t *port)
 {
     msg_t msg;
-    int timeout = 3;
+    int timeout = 10; // JK up from 3
     while ((timeout--) > 0) {
         gnrc_pktsnip_t *pkt, *l3hdr;
         size_t size = 0;
