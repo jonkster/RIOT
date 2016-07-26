@@ -57,7 +57,7 @@
 
 #include <err.h>
 
-int verbose = 1;
+int verbose = 0;
 const char *ipaddr;
 const char *netmask;
 int slipfd = 0;
