@@ -50,4 +50,3 @@ enum {
 
 #endif /* PERIPH_CPU_H_ */
 /** @} */
-
