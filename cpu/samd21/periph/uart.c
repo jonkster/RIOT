@@ -89,7 +89,8 @@ static int init_base(uart_t uart, uint32_t baudrate)
     /* set asynchronous mode w/o parity, LSB first, PAD0 to TX, PAD1 to RX and
      * use internal clock */
     dev->CTRLA.reg = (SERCOM_USART_CTRLA_DORD |
-                      SERCOM_USART_CTRLA_RXPO(0x1) |
+                      SERCOM_USART_CTRLA_TXPO(uart_config[uart].txpo) | 
+                      SERCOM_USART_CTRLA_RXPO(uart_config[uart].rxpo) | 
                       SERCOM_USART_CTRLA_SAMPR(0x1) |
                       SERCOM_USART_CTRLA_MODE_USART_INT_CLK);
     /* set baudrate */

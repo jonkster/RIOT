@@ -86,6 +86,8 @@ typedef struct {
     gpio_t rx_pin;          /**< pin used for RX */
     gpio_t tx_pin;          /**< pin used for TX */
     gpio_mux_t mux;         /**< alternative function for pins */
+    uint8_t rxpo;           /**< pad used for RX */
+    uint8_t txpo;           /**< pad used for TX */
 } uart_conf_t;
 
 /**
