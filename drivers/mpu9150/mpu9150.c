@@ -71,6 +71,15 @@ int mpu9150_init(mpu9150_t *dev, i2c_t i2c, mpu9150_hw_addr_t hw_addr,
     /* Acquire exclusive access */
     i2c_acquire(dev->i2c_dev);
 
+/* Check whether MPU answers correctly */
+/*char data[3];
+i2c_read_reg(dev->i2c_dev, dev->comp_addr, MPU9150_WHO_AM_I_REG, data);
+if (data[0] != MPU9150_WHOAMI_ANSWER) {
+    DEBUG("[Error] Wrong answer from MPU\n");
+    printf("got %d\n instead of %d\n", data[0], MPU9150_WHO_AM_I_REG);
+    return -1;
+}*/
+
     /* Reset MPU9150 registers and afterwards wake up the chip */
     i2c_write_reg(dev->i2c_dev, dev->hw_addr, MPU9150_PWR_MGMT_1_REG, MPU9150_PWR_RESET);
     xtimer_usleep(MPU9150_RESET_SLEEP_US);

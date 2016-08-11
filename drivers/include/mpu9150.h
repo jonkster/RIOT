@@ -27,6 +27,8 @@
 extern "C" {
 #endif
 
+#define MPU9150_WHOAMI_ANSWER  (0x68)
+
 /**
  * @name Sample rate macro definitions
  * @{
