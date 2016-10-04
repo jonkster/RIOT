@@ -688,10 +688,9 @@ int mpu9250_read_compass(mpu9250_t *dev, mpu9250_results_t *output)
         return mpu9250_read_compass(dev, output);
     }
 
-    output->x_axis = convertRawToS16LE(data);
-    output->y_axis = convertRawToS16LE(data+2);
-    output->z_axis = convertRawToS16LE(data+4);
-printf("raw %i %i %i\n", output->x_axis, output->y_axis, output->z_axis);
+    output->x_axis = convertRawToS16BE(data);
+    output->y_axis = convertRawToS16BE(data+2);
+    output->z_axis = convertRawToS16BE(data+4);
 
     /* Compute sensitivity adjustment */
     output->x_axis = magAdjust(output->x_axis, dev->conf.compass_x_adj);
@@ -918,11 +917,11 @@ static int compass_init(mpu9250_t *dev)
     xtimer_usleep(MPU9250_COMP_MODE_SLEEP_US);
 
     // Choose either 14-bit (0) or 16-bit (1) magnetometer resolution
-    uint8_t mRes = 0;
+    uint8_t mRes = 1;
     // set read mode (eg continuous)
     // continuous measurement mode 1 (MODE[3:0]=“0010”) = 8Hz or 2 (MODE[3:0]=“0110”) = 100Hz rate
     //uint8_t mMode = MPU9250_COMP_CONTINUOUS_MEASURE_1_MODE;
-    uint8_t mMode = MPU9250_COMP_CONTINUOUS_MEASURE_1_MODE;
+    uint8_t mMode = MPU9250_COMP_CONTINUOUS_MEASURE_2_MODE;
     i2c_write_reg(dev->i2c_dev, dev->comp_addr, COMPASS_CNTL_REG, mRes << 4 | mMode); // Set magnetometer data resolution and sample ODR
     xtimer_usleep(MPU9250_COMP_MODE_SLEEP_US);
 
