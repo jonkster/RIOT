@@ -293,13 +293,13 @@ int mpu9250_init(mpu9250_t *dev, i2c_t i2c, mpu9250_hw_addr_t hw_addr,
 
 int16_t convertRawToS16BE(char *data)
 {
-    int16_t v = (int16_t)(((int16_t)data[0] << 8) | data[1]);
+    int16_t v = (int16_t)(((uint16_t)data[0] << 8) | data[1]);
     return v;
 }
 
 int16_t convertRawToS16LE(char *data)
 {
-    int16_t v = (int16_t)(((int16_t)data[1] << 8) | data[0]);
+    int16_t v = (int16_t)(((uint16_t)data[1] << 8) | data[0]);
     return v;
 }
 
@@ -661,22 +661,22 @@ int mpu9250_read_compass(mpu9250_t *dev, mpu9250_results_t *output)
         return -1;
     }
     conf_bypass(dev, 1);
+    uint8_t mRes = 1;
+    uint8_t mMode = MPU9250_COMP_SINGLE_MEASURE_MODE;
+    uint8_t mode = mRes << 4 | mMode;
+    i2c_write_reg(dev->i2c_dev, dev->comp_addr, COMPASS_CNTL_REG, mode);
 
-    char data[7];
 
-    // read status
-    char st1 = 0;
-    i2c_read_reg(dev->i2c_dev, dev->comp_addr, COMPASS_ST1_REG, &st1);
+    char data[8]; // data[0] = ST1 reg, data[1..6] = mag data and data[7] = ST2 reg
+    i2c_read_regs(dev->i2c_dev, dev->comp_addr, COMPASS_ST1_REG, data, 8);
 
-    /* Read raw data and status register (6 + 1 bytes) (reading status register
-     * at this point as well as data resets the status flags) */
-    i2c_read_regs(dev->i2c_dev, dev->comp_addr, COMPASS_DATA_START_REG, data, 7);
     conf_bypass(dev, 0);
     i2c_release(dev->i2c_dev);
 
     // ready flag (st1 & 0x01 0) not relevant in continuous mode
-    bool overrun = st1 & 0x02;
-    bool overflow = data[6] & 0x08;
+    bool ready = data[0] & 0x01;
+    bool overrun = data[0] & 0x02;
+    bool overflow = data[7] & 0x08;
 
     if (overrun)
     {
@@ -688,14 +688,24 @@ int mpu9250_read_compass(mpu9250_t *dev, mpu9250_results_t *output)
         return mpu9250_read_compass(dev, output);
     }
 
-    output->x_axis = convertRawToS16BE(data);
-    output->y_axis = convertRawToS16BE(data+2);
-    output->z_axis = convertRawToS16BE(data+4);
+    if (ready)
+    {
 
-    /* Compute sensitivity adjustment */
-    output->x_axis = magAdjust(output->x_axis, dev->conf.compass_x_adj);
-    output->y_axis = magAdjust(output->y_axis, dev->conf.compass_y_adj);
-    output->z_axis = magAdjust(output->z_axis, dev->conf.compass_z_adj);
+        output->x_axis = convertRawToS16LE(data+1);
+        output->y_axis = convertRawToS16LE(data+3);
+        output->z_axis = convertRawToS16LE(data+5);
+
+        /* Compute sensitivity adjustment */
+        output->x_axis = magAdjust(output->x_axis, dev->conf.compass_x_adj);
+        output->y_axis = magAdjust(output->y_axis, dev->conf.compass_y_adj);
+        output->z_axis = magAdjust(output->z_axis, dev->conf.compass_z_adj);
+    }
+    else
+    {
+        puts("not rdy");
+        return -1;
+    }
+
     return 0;
 }
 
@@ -921,8 +931,9 @@ static int compass_init(mpu9250_t *dev)
     // set read mode (eg continuous)
     // continuous measurement mode 1 (MODE[3:0]=“0010”) = 8Hz or 2 (MODE[3:0]=“0110”) = 100Hz rate
     //uint8_t mMode = MPU9250_COMP_CONTINUOUS_MEASURE_1_MODE;
-    uint8_t mMode = MPU9250_COMP_CONTINUOUS_MEASURE_2_MODE;
-    i2c_write_reg(dev->i2c_dev, dev->comp_addr, COMPASS_CNTL_REG, mRes << 4 | mMode); // Set magnetometer data resolution and sample ODR
+    uint8_t mMode = MPU9250_COMP_CONTINUOUS_MEASURE_1_MODE;
+    uint8_t mode = mRes << 4 | mMode;
+    i2c_write_reg(dev->i2c_dev, dev->comp_addr, COMPASS_CNTL_REG, mode); // Set magnetometer data resolution and sample ODR
     xtimer_usleep(MPU9250_COMP_MODE_SLEEP_US);
 
     /* Disable Bypass Mode to configure MPU as master to the compass */
